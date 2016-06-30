@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>DropBlox</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.1/dragula.min.css" charset="utf-8">
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-52795412-4', 'auto');
+  ga('send', 'pageview');
+
+</script>
+<style>
+* {
+  box-sizing: border-box;
+}
+body {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+}
+.nav {
+  height: 30px;
+  background-color: rgb(88, 88, 88);
+}
+.nav > .right {
+  float: right;
+}
+.nav button {
+  margin: 0;
+  padding: 3px;
+  border: none;
+  color: white;
+  background-color: rgb(88, 88, 88);
+  height: 30px;
+  font-size: 14px;
+}
+.nav button:hover {
+  background-color: rgb(124, 124, 124);
+}
+.nav button:active {
+  background-color: rgb(176, 176, 176);
+  color: black;
+}
+.nav > .title {
+  display: inline-block;
+  margin: 0;
+  padding: 3px;
+  border: none;
+  color: white;
+  background-color: rgb(88, 88, 88);
+  height: 30px;
+  font-size: 14px;
+}
+.title-accent {
+  color: rgb(245, 140, 31);
+  font-weight: bold;
+}
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+.library {
+  width: 400px;
+  background-color: rgb(176, 176, 176);
+}
+.script {
+  flex: 1;
+  background-color: rgb(228, 228, 228);
+}
+
+.block-container {
+  padding: 10px;
+}
+
+.block-container > .block {
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  padding: 5px;
+  cursor: move;
+}
+
+.action {
+  color: white;
+  background-color: rgb(84, 93, 215);
+}
+.control {
+  color: white;
+  background-color: rgb(199, 173, 0);
+}
+.variable {
+  color: white;
+  background-color: rgb(69, 144, 53);
+}
+
+.string {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12pt;
+  border-radius: 4px;
+  padding: 5px;
+  border: none;
+  outline: none;
+}
+.string:focus {
+  border: 2px rgb(45, 45, 45) solid;
+  padding: 3px;
+}
+
+.entity {
+  background-color: rgb(222, 222, 222);
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12pt;
+  border-radius: 4px;
+  padding: 5px;
+  border: none;
+  outline: none;
+}
+.entity:focus {
+  border: 2px rgb(45, 45, 45) solid;
+  padding: 3px;
+}
+
+.number {
+  font-family: "Helvetica Neue", Helvetica, sans-serif;
+  font-size: 12pt;
+  border-radius: 15px;
+  padding: 5px;
+  border: none;
+  outline: none;
+}
+.number:focus {
+  border: 2px rgb(45, 45, 45) solid;
+  padding: 3px;
+}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="nav">
+<span class="title">Drop<span class="title-accent">Blox</span></span>
+<span class="right">
+<button id="run">Run</button>
+<button id="getJS">Get JavaScript</button>
+</span>
+</div>
+<div class="main">
+<div id="library" class="block-container library">
+</div>
+<div id="script" class="block-container script">
+</div>
+</div>
+</div>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.1/dragula.min.js'></script>
+<script>
+var iteratorCode = 0;
+var blockSpecs = [
+  {
+    title: "Alert %s",
+    type: "action",
+    code: function(args) { return "alert(" + args[0] + ");"; }
+  },
+  {
+    title: "Show copy box %s",
+    type: "action",
+    code: function(args) { return "prompt(\"Copy this text:\"," + args[0] + ");"; }
+  },
+  {
+    title: "Define variable %e",
+    type: "variable",
+    code: function(args) { return "var " + args[0] + ";"; }
+  },
+  {
+    title: "Set %e to %s",
+    type: "variable",
+    code: function(args) { return args[0] + "=" + args[1] + ";"; }
+  },
+  {
+    title: "Repeat %n Times",
+    type: "control",
+    code: function(args) {
+      i++;
+      return "for(var i" + iteratorCode + "=0;i" + iteratorCode + "<" + args[0] + ";i" + iteratorCode + "++){";
+    }
+  },
+  {
+    title: "End",
+    type: "control",
+    code: function(args) { return "}"; }
+  }
+]
+function getJS() {
+  var blocks = document.getElementById("script").children;
+  var code = ""
+  for (var i = 0; i < blocks.length; i++) {
+    var block = blocks[i];
+    blockSpec = blockSpecs[block.getAttribute("data-block-id")];
+    var blockSpecTitle = blockSpec.title;
+    var isField = false;
+    var buffer = "";
+    var parts = [];
+    for (var c = 0; c < blockSpecTitle.length; c++) {
+      var char = blockSpecTitle.charAt(c);
+      if (isField) {
+        if (char === "s") {
+          parts.push({
+            type: "string"
+          })
+        }else if (char === "e") {
+          parts.push({
+            type: "entity"
+          })
+        }else if (char === "n") {
+          parts.push({
+            type: "number"
+          })
+        }
+        isField = false;
+      }else{
+        if (char === "%") {
+          parts.push({
+            type: "title",
+            value: buffer
+          })
+          buffer = ""
+          isField = true;
+        }else{
+          buffer += char;
+        }
+      }
+    }
+    parts.push({
+      type: "title",
+      value: buffer
+    })
+    var args = [];
+    for (var b = 0; b < parts.length; b++) {
+      var part = parts[b];
+      if (part.type === "string") {
+        args.push("\"" + block.children[b].value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\[\[(.*)\]\]/, function(m, v) {
+          return "\"+ent_" + v.replace(/[^a-zA-Z_$\-]/g, "___Unknown___") + "+\"";
+        }) + "\"")
+      }else if (part.type === "entity") {
+        args.push("ent_" + block.children[b].value.replace(/[^a-zA-Z_$\-]/g, "___Unknown___"))
+      }else if (part.type === "number") {
+        args.push(parseFloat(block.children[b].value))
+      }
+    }
+    code += blockSpec.code(args);
+  }
+  return code;
+}
+for (var i = 0; i < blockSpecs.length; i++) {
+  var blockSpecTitle = blockSpecs[i].title;
+  var isField = false;
+  var buffer = "";
+  var parts = [];
+  for (var c = 0; c < blockSpecTitle.length; c++) {
+    var char = blockSpecTitle.charAt(c);
+    if (isField) {
+      if (char === "s") {
+        parts.push({
+          type: "string"
+        })
+      }else if (char === "e") {
+        parts.push({
+          type: "entity"
+        })
+      }else if (char === "n") {
+        parts.push({
+          type: "number"
+        })
+      }
+      isField = false;
+    }else{
+      if (char === "%") {
+        parts.push({
+          type: "title",
+          value: buffer
+        })
+        buffer = ""
+        isField = true;
+      }else{
+        buffer += char;
+      }
+    }
+  }
+  parts.push({
+    type: "title",
+    value: buffer
+  })
+  var blockDiv = document.createElement("div");
+  blockDiv.setAttribute("data-block-id", i);
+  blockDiv.className = "block " + blockSpecs[i].type;
+  for (var p = 0; p < parts.length; p++) {
+    var part = parts[p];
+    if (part.type === "title") {
+      var title = document.createElement("span");
+      title.textContent = part.value
+      blockDiv.appendChild(title)
+    }else if (part.type === "string") {
+      var input = document.createElement("input");
+      input.className = "string";
+      blockDiv.appendChild(input);
+    }else if (part.type === "entity") {
+      var input = document.createElement("input");
+      input.className = "entity";
+      blockDiv.appendChild(input);
+    }else if (part.type === "number") {
+      var input = document.createElement("input");
+      input.className = "number";
+      blockDiv.appendChild(input);
+    }
+  }
+  document.getElementById("library").appendChild(blockDiv);
+}
+document.getElementById("run").addEventListener("click", function(){
+  var code = getJS();
+  try {
+    eval(code);
+  } catch (err) {
+    alert(err.message);
+  }
+});
+document.getElementById("getJS").addEventListener("click", function(){
+  prompt("The JavaScript for this project is:", getJS());
+});
+var dragger = dragula({
+  containers: [document.getElementById("library"), document.getElementById("script")],
+  copy: function (el, source) {
+    return source === document.getElementById("library")
+  },
+  accepts: function (el, target) {
+    return target !== document.getElementById("library")
+  },
+  removeOnSpill: true
+});
+</script>
+</body>
+</html>
