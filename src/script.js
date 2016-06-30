@@ -1,174 +1,20 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>DropBlox</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.1/dragula.min.css" charset="utf-8">
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+/*
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-  ga('create', 'UA-52795412-4', 'auto');
-  ga('send', 'pageview');
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
 
-</script>
-<style>
-* {
-  box-sizing: border-box;
-}
-body {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-.app {
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  top: 0;
-  left: 0;
-  display: flex;
-  flex-direction: column;
-}
-.nav {
-  height: 30px;
-  background-color: rgb(88, 88, 88);
-}
-.nav > .right {
-  float: right;
-}
-.nav button {
-  margin: 0;
-  padding: 3px;
-  border: none;
-  color: white;
-  background-color: rgb(88, 88, 88);
-  height: 30px;
-  font-size: 14px;
-}
-.nav button:hover {
-  background-color: rgb(124, 124, 124);
-}
-.nav button:active {
-  background-color: rgb(176, 176, 176);
-  color: black;
-}
-.nav > .title {
-  display: inline-block;
-  margin: 0;
-  padding: 3px;
-  border: none;
-  color: white;
-  background-color: rgb(88, 88, 88);
-  height: 30px;
-  font-size: 14px;
-}
-.title-accent {
-  color: rgb(245, 140, 31);
-  font-weight: bold;
-}
-.main {
-  flex: 1;
-  display: flex;
-  flex-direction: row;
-}
-.library {
-  width: 400px;
-  background-color: rgb(176, 176, 176);
-}
-.script {
-  flex: 1;
-  background-color: rgb(228, 228, 228);
-}
-
-.block-container {
-  padding: 10px;
-}
-
-.block-container > .block {
-  width: 100%;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  padding: 5px;
-  cursor: move;
-}
-
-.action {
-  color: white;
-  background-color: rgb(84, 93, 215);
-}
-.control {
-  color: white;
-  background-color: rgb(199, 173, 0);
-}
-.variable {
-  color: white;
-  background-color: rgb(69, 144, 53);
-}
-
-.string {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 12pt;
-  border-radius: 4px;
-  padding: 5px;
-  border: none;
-  outline: none;
-}
-.string:focus {
-  border: 2px rgb(45, 45, 45) solid;
-  padding: 3px;
-}
-
-.entity {
-  background-color: rgb(222, 222, 222);
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 12pt;
-  border-radius: 4px;
-  padding: 5px;
-  border: none;
-  outline: none;
-}
-.entity:focus {
-  border: 2px rgb(45, 45, 45) solid;
-  padding: 3px;
-}
-
-.number {
-  font-family: "Helvetica Neue", Helvetica, sans-serif;
-  font-size: 12pt;
-  border-radius: 15px;
-  padding: 5px;
-  border: none;
-  outline: none;
-}
-.number:focus {
-  border: 2px rgb(45, 45, 45) solid;
-  padding: 3px;
-}
-</style>
-</head>
-<body>
-<div class="app">
-<div class="nav">
-<span class="title">Drop<span class="title-accent">Blox</span></span>
-<span class="right">
-<button id="run">Run</button>
-<button id="getJS">Get JavaScript</button>
-</span>
-</div>
-<div class="main">
-<div id="library" class="block-container library">
-</div>
-<div id="script" class="block-container script">
-</div>
-</div>
-</div>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/dragula/3.7.1/dragula.min.js'></script>
-<script>
 var iteratorCode = 0;
 var blockSpecs = [
   {
@@ -351,6 +197,3 @@ var dragger = dragula({
   },
   removeOnSpill: true
 });
-</script>
-</body>
-</html>
