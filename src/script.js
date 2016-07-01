@@ -38,6 +38,11 @@ var blockSpecs = [
     code: function(args) { return "prompt(\"Copy this text:\"," + args[0] + ");"; }
   },
   {
+    title: "Ask %s And Set %e To Result",
+    type: "action",
+    code: function(args) { return args[1] + "=prompt(" + args[0] + ");"; }
+  },
+  {
     title: "Define Variable %e",
     type: "variable",
     code: function(args) { return "var " + args[0] + ";"; }
