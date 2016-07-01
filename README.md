@@ -3,7 +3,7 @@
 
 I am working on my own drag and drop programming language, it can be found [here](http://www.ianmorrill.com/dropblox). If I continue to work it, I hope to make it more Scratch-like in nature (Stage, Sprites, etc.).
 
-Features:
+**Features**
 - The Following Blocks:
   - Alert _
   - Show copy box _
@@ -15,6 +15,14 @@ Features:
 - Execution via JavaScript
 
 More blocks will be added.
+
+**How Do I Get It!?**
+There are two sites that you can use DropBlox live on. These sites are shown below.
+
+Site | Description
+--- | ---
+[My Personal Website](http://www.ianmorrill.com/dropblox) | Usually updated after I commit but sometimes not.
+[gh-pages](http://iwotastic.github.io/DropBlox) | As it is `gh-pages`, it is always up to date.
 
 ## Usage Guide
 A guide to the nooks and crannies of DropBlox.
