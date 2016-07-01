@@ -98,6 +98,14 @@ body {
   cursor: move;
 }
 
+:not(.block-container) > .block {
+  width: 500px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  padding: 5px;
+  cursor: move;
+}
+
 .action {
   color: white;
   background-color: rgb(84, 93, 215);
