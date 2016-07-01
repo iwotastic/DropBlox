@@ -1,7 +1,7 @@
 # DropBlox
 *JavaScript Based Drag And Drop Language*
 
-I am working on my own drag and drop programming language, it can be found [here](http://www.ianmorrill.com/drobblox). If I continue to work it, I hope to make it more Scratch-like in nature (Stage, Sprites, etc.).
+I am working on my own drag and drop programming language, it can be found [here](http://www.ianmorrill.com/dropblox). If I continue to work it, I hope to make it more Scratch-like in nature (Stage, Sprites, etc.).
 
 Features:
 - The Following Blocks:
@@ -27,6 +27,9 @@ Type | Description
 String | White background, simi-curved borders
 Entity | Grey background, simi-curved borders
 Number | White background, curved borders
+
+### Loop / C Blocks
+To use a loop / C block, simply drag an `end` block after the last block you wish to be in the loop block.
 
 ### Variable Embedding
 To embed a variable in a string input, surround it in double brackets. For example, if you were trying to embed a variable called `hi` then in a text inupt you would type `[[hi]]`
