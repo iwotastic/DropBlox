@@ -68,6 +68,13 @@ var blockSpecs = [
     }
   },
   {
+    title: "Else If %s Equals %s Then",
+    type: "control",
+    code: function(args) {
+      return "}else if(" + args[0] + " == " + args[1] + "){";
+    }
+  },
+  {
     title: "Else",
     type: "control",
     code: function(args) {
