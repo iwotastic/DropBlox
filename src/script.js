@@ -33,17 +33,17 @@ var blockSpecs = [
     code: function(args) { return "alert(" + args[0] + ");"; }
   },
   {
-    title: "Show copy box %s",
+    title: "Show Copy Box %s",
     type: "action",
     code: function(args) { return "prompt(\"Copy this text:\"," + args[0] + ");"; }
   },
   {
-    title: "Define variable %e",
+    title: "Define Variable %e",
     type: "variable",
     code: function(args) { return "var " + args[0] + ";"; }
   },
   {
-    title: "Set %e to %s",
+    title: "Set %e To %s",
     type: "variable",
     code: function(args) { return args[0] + "=" + args[1] + ";"; }
   },
@@ -53,6 +53,14 @@ var blockSpecs = [
     code: function(args) {
       i++;
       return "for(var i" + iteratorCode + "=0;i" + iteratorCode + "<" + args[0] + ";i" + iteratorCode + "++){";
+    }
+  },
+  {
+    title: "If %s Equals %s Then",
+    type: "control",
+    code: function(args) {
+      i++;
+      return "if(" + args[0] + " == " + args[1] + "){";
     }
   },
   {
