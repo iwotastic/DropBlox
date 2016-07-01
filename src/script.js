@@ -204,6 +204,10 @@ document.getElementById("getJS").addEventListener("click", function(){
   // Give the user their unreadable code. :P
   prompt("The JavaScript for this project is:", getJS());
 });
+document.getElementById("about").addEventListener("click", function(){
+  // Take the user to this repo
+  location.assign("https://github.com/Iwotastic/DropBlox")
+});
 var dragger = dragula({ // Initialize Dragula (bevacqua/dragula)
   containers: [document.getElementById("library"), document.getElementById("script")],
   copy: function (el, source) {
