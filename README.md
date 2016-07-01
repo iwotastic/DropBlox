@@ -3,19 +3,6 @@
 
 I am working on my own drag and drop programming language, it can be found [here](http://www.ianmorrill.com/dropblox). If I continue to work it, I hope to make it more Scratch-like in nature (Stage, Sprites, etc.).
 
-## Features
-- The Following Blocks:
-  - Alert _
-  - Show copy box _
-  - Define variable _
-  - Set _ to _
-  - Repeat _ Times
-  - End
-- Export JavaScript
-- Execution via JavaScript
-
-More blocks will be added.
-
 ## How Do I Get It!?
 There are two sites that you can use DropBlox live on. These sites are shown below.
 
