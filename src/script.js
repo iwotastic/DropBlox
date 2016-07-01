@@ -15,7 +15,17 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-var iteratorCode = 0;
+var iteratorCode = 0; // UID For Repeat Loops
+/*
+Block Spefifications:
+Key to properties:
+  title - Display name for block use these modifiers to add input:
+    %s - string
+    %e - entity - variable
+    %n - number - float
+  type - Tells DropBlox how to color blocks (see style.css)
+  code - function that takes one array argument and returns a string contaning the JavaScript run for that block
+*/
 var blockSpecs = [
   {
     title: "Alert %s",
@@ -51,19 +61,22 @@ var blockSpecs = [
     code: function(args) { return "}"; }
   }
 ]
+/*
+  This function parses through the blocks and returns the entire JS needed to run the current project.
+*/
 function getJS() {
-  var blocks = document.getElementById("script").children;
-  var code = ""
-  for (var i = 0; i < blocks.length; i++) {
+  var blocks = document.getElementById("script").children; // Get all of the "block" elements
+  var code = ""; // A buffer to store the JS code
+  for (var i = 0; i < blocks.length; i++) { // Loop through the "block" elements
     var block = blocks[i];
-    blockSpec = blockSpecs[block.getAttribute("data-block-id")];
+    blockSpec = blockSpecs[block.getAttribute("data-block-id")]; // Get the blockSpec for the current block
     var blockSpecTitle = blockSpec.title;
     var isField = false;
     var buffer = "";
-    var parts = [];
+    var parts = []; // Place to hold all of the block parts
     for (var c = 0; c < blockSpecTitle.length; c++) {
       var char = blockSpecTitle.charAt(c);
-      if (isField) {
+      if (isField) { // Check the field type
         if (char === "s") {
           parts.push({
             type: "string"
@@ -79,31 +92,32 @@ function getJS() {
         }
         isField = false;
       }else{
-        if (char === "%") {
+        if (char === "%") { // We got ourselves a field let's handle it
           parts.push({
             type: "title",
             value: buffer
           })
           buffer = ""
           isField = true;
-        }else{
+        }else{ // Add to the buffer
           buffer += char;
         }
       }
     }
-    parts.push({
+    parts.push({ // Add the final title (probably could get rid of this)
       type: "title",
       value: buffer
     })
-    var args = [];
+    var args = []; // Place to hold user provided arguments
     for (var b = 0; b < parts.length; b++) {
       var part = parts[b];
       if (part.type === "string") {
         args.push("\"" + block.children[b].value.replace(/\\/g, "\\\\").replace(/"/g, "\\\"").replace(/\[\[(.*)\]\]/, function(m, v) {
+          // This function is cool, it allows you to embed variables in string inputs :)
           return "\"+ent_" + v.replace(/[^a-zA-Z_$\-]/g, "___Unknown___") + "+\"";
         }) + "\"")
       }else if (part.type === "entity") {
-        args.push("ent_" + block.children[b].value.replace(/[^a-zA-Z_$\-]/g, "___Unknown___"))
+        args.push("ent_" + block.children[b].value.replace(/[^a-zA-Z_$\-]/g, "___Unknown___")) // Entity inputs with added saftey feature
       }else if (part.type === "number") {
         args.push(parseFloat(block.children[b].value))
       }
@@ -112,14 +126,14 @@ function getJS() {
   }
   return code;
 }
-for (var i = 0; i < blockSpecs.length; i++) {
+for (var i = 0; i < blockSpecs.length; i++) { // Loop through blockSpecs and add blocks to library
   var blockSpecTitle = blockSpecs[i].title;
   var isField = false;
   var buffer = "";
   var parts = [];
   for (var c = 0; c < blockSpecTitle.length; c++) {
     var char = blockSpecTitle.charAt(c);
-    if (isField) {
+    if (isField) { // Check the field type
       if (char === "s") {
         parts.push({
           type: "string"
@@ -135,26 +149,26 @@ for (var i = 0; i < blockSpecs.length; i++) {
       }
       isField = false;
     }else{
-      if (char === "%") {
+      if (char === "%") { // We got ourselves a field let's handle it
         parts.push({
           type: "title",
           value: buffer
         })
         buffer = ""
         isField = true;
-      }else{
+      }else{ // Add to the buffer
         buffer += char;
       }
     }
   }
-  parts.push({
+  parts.push({ // Add the final title
     type: "title",
     value: buffer
   })
-  var blockDiv = document.createElement("div");
-  blockDiv.setAttribute("data-block-id", i);
-  blockDiv.className = "block " + blockSpecs[i].type;
-  for (var p = 0; p < parts.length; p++) {
+  var blockDiv = document.createElement("div"); // Create <div> representing block
+  blockDiv.setAttribute("data-block-id", i); // Set block-id (this is important when parsing)
+  blockDiv.className = "block " + blockSpecs[i].type; // Set class
+  for (var p = 0; p < parts.length; p++) { // Add ALL the fields (insert "ALL THE" meme here)
     var part = parts[p];
     if (part.type === "title") {
       var title = document.createElement("span");
@@ -174,20 +188,23 @@ for (var i = 0; i < blockSpecs.length; i++) {
       blockDiv.appendChild(input);
     }
   }
-  document.getElementById("library").appendChild(blockDiv);
+  document.getElementById("library").appendChild(blockDiv); // Append finished block to the library
 }
 document.getElementById("run").addEventListener("click", function(){
+  // Run user's code
   var code = getJS();
   try {
+    // DropBlox isn't perfect, the user's code could error so let's handle that
     eval(code);
   } catch (err) {
     alert(err.message);
   }
 });
 document.getElementById("getJS").addEventListener("click", function(){
+  // Give the user their unreadable code. :P
   prompt("The JavaScript for this project is:", getJS());
 });
-var dragger = dragula({
+var dragger = dragula({ // Initialize Dragula (bevacqua/dragula)
   containers: [document.getElementById("library"), document.getElementById("script")],
   copy: function (el, source) {
     return source === document.getElementById("library")
