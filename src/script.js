@@ -82,6 +82,13 @@ var blockSpecs = [
     }
   },
   {
+    title: "While %s Equals %s Do",
+    type: "control",
+    code: function(args) {
+      return "while(" + args[0] + "==" + args[1] + "){";
+    }
+  },
+  {
     title: "End",
     type: "control",
     code: function(args) { return "}"; }
