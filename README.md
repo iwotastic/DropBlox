@@ -9,7 +9,7 @@ There are two sites that you can use DropBlox live on. These sites are shown bel
 Site | Description
 --- | ---
 [My Personal Website](http://www.ianmorrill.com/dropblox) | Usually updated after I commit but sometimes not.
-[gh-pages](http://iwotastic.github.io/DropBlox) | As it is `gh-pages`, it is always up to date.
+[gh-pages](http://iwotastic.github.io/DropBlox/src) | As it is `gh-pages`, it is always up to date.
 
 ## Usage Guide
 A guide to the nooks and crannies of DropBlox.
