@@ -97,7 +97,8 @@ body {
   margin-bottom: 10px;
   border-radius: 4px;
   padding: 5px;
-  cursor: move;
+  cursor: grab;
+  cursor: -webkit-grab;
 }
 
 :not(.block-container) > .block {
@@ -105,7 +106,8 @@ body {
   margin-bottom: 10px;
   border-radius: 4px;
   padding: 5px;
-  cursor: move;
+  cursor: grabbing;
+  cursor: -webkit-grabbing;
 }
 
 .action {

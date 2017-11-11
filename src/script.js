@@ -109,7 +109,7 @@ function getJS() {
   var code = ""; // A buffer to store the JS code
   for (var i = 0; i < blocks.length; i++) { // Loop through the "block" elements
     var block = blocks[i];
-    blockSpec = blockSpecs[block.getAttribute("data-block-id")]; // Get the blockSpec for the current block
+    var blockSpec = blockSpecs[block.getAttribute("data-block-id")]; // Get the blockSpec for the current block
     var blockSpecTitle = blockSpec.title;
     var isField = false;
     var buffer = "";
@@ -242,11 +242,97 @@ document.getElementById("run").addEventListener("click", function(){
 });
 document.getElementById("getJS").addEventListener("click", function(){
   // Give the user their unreadable code. :P
-  prompt("The JavaScript for this project is:", getJS());
+  var code = getJS()
+  var scriptName = prompt("What you you like to name the JavaScript file?")
+  if (scriptName) {
+    var downloader = document.createElement("a")
+    downloader.href = "data:text/javascript," + encodeURI(code)
+    downloader.style.display = "none"
+    downloader.download = scriptName + ".js"
+    document.body.appendChild(downloader)
+    downloader.click()
+  }
+});
+document.getElementById("saveScript").addEventListener("click", function(){
+  var scriptHTML = "";
+  var blocks = document.getElementById("script").children;
+  Array.from(blocks).forEach(block => {
+    var blockSpec = blockSpecs[Number(block.getAttribute("data-block-id"))];
+    var blockSpecTitle = blockSpec.title;
+    var isField = false;
+    var buffer = "";
+    var parts = [];
+    for (var c = 0; c < blockSpecTitle.length; c++) {
+      var char = blockSpecTitle.charAt(c);
+      if (isField) { // Check the field type
+        if (char === "s") {
+          parts.push({
+            type: "string"
+          })
+        }else if (char === "e") {
+          parts.push({
+            type: "entity"
+          })
+        }else if (char === "n") {
+          parts.push({
+            type: "number"
+          })
+        }
+        isField = false;
+      }else{
+        if (char === "%") { // We got ourselves a field let's handle it
+          parts.push({
+            type: "title",
+            value: buffer
+          })
+          buffer = ""
+          isField = true;
+        }else{ // Add to the buffer
+          buffer += char;
+        }
+      }
+    }
+    parts.push({ // Add the final title
+      type: "title",
+      value: buffer
+    })
+    scriptHTML += "<div data-block-id=\"" + block.getAttribute("data-block-id") + "\" class=\"block " + blockSpec.type + "\">"
+    for (var p = 0; p < parts.length; p++) { // Add ALL the fields (insert "ALL THE" meme here)
+      var part = parts[p];
+      if (part.type === "title") {
+        scriptHTML += "<span>" + part.value + "</span>"
+      }else if (part.type === "string") {
+        scriptHTML += "<input class=\"string\" value=\"" + block.children[p].value + "\">"
+      }else if (part.type === "entity") {
+        scriptHTML += "<input class=\"entity\" value=\"" + block.children[p].value + "\">"
+      }else if (part.type === "number") {
+        scriptHTML += "<input class=\"number\" value=\"" + block.children[p].value + "\">"
+      }
+    }
+    scriptHTML += "</div>"
+  })
+  var currentScriptsRaw = localStorage.scripts || "{}"
+  var currentScripts = JSON.parse(currentScriptsRaw)
+  var scriptName = prompt("What would you like to name this script?")
+  currentScripts[scriptName] = scriptHTML
+  localStorage.scripts = JSON.stringify(currentScripts)
+});
+document.getElementById("loadScript").addEventListener("click", function(){
+  if (localStorage.scripts) {
+    var currentScripts = JSON.parse(localStorage.scripts)
+    var scriptName = prompt("What script would you like to load?")
+    if (currentScripts[scriptName]) {
+      document.getElementById("script").innerHTML = currentScripts[scriptName]
+    }else{
+      alert("Sorry, no script stored.")
+    }
+  }else{
+    alert("Sorry, no scripts found.")
+  }
 });
 document.getElementById("about").addEventListener("click", function(){
   // Take the user to this repo
-  location.assign("https://github.com/Iwotastic/DropBlox")
+  location.assign("https://github.com/iwotastic/DropBlox")
 });
 var dragger = dragula({ // Initialize Dragula (bevacqua/dragula)
   containers: [document.getElementById("library"), document.getElementById("script")],
