@@ -89,6 +89,13 @@ var blockSpecs = [
     }
   },
   {
+    title: "Show Comfimation %s, If Yes Do",
+    type: "control",
+    code: function(args) {
+      return "if(confirm(" + args[0] + ")){";
+    }
+  },
+  {
     title: "End",
     type: "control",
     code: function(args) { return "}"; }
